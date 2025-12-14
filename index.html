@@ -1,1 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Russenorsk Core Dictionary (Historical Core v1)</title>
+  <style>
+    :root{
+      --bg: #ffffff;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --blue: #1d4ed8;
+      --red: #dc2626;
+      --card: #f9fafb;
+    }
 
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      color: var(--ink);
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 12px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      line-height:1.1;
+    }
+
+    .brand .title{
+      font-size: 16px;
+      font-weight: 750;
+      letter-spacing:.2px;
+    }
+
+    .brand .subtitle{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .flagbar{
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--red) 0 33%, var(--bg) 33% 66%, var(--blue) 66% 100%);
+    }
+
+    main{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .panel{
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 22px rgba(17,24,39,.06);
+    }
+
+    .panelhead{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .panelhead h2{
+      margin:0;
+      font-size: 14px;
+      font-weight: 750;
+      letter-spacing:.2px;
+    }
+
+    .hint{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    input[type="search"]{
+      flex: 1 1 280px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    input[type="search"]:focus{
+      border-color: rgba(29,78,216,.45);
+      box-shadow: 0 0 0 4px rgba(29,78,216,.12);
+    }
+
+    .btn{
+      border: 1px solid var(--line);
+      background: var(--card);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 650;
+      font-size: 13px;
+    }
+    .btn:hover{ border-color: #cbd5e1; }
+    .btn.primary{
+      background: rgba(29,78,216,.08);
+      border-color: rgba(29,78,216,.25);
+      color: var(--blue);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    @media (max-width: 920px){
+      .layout{ grid-template-columns: 1fr; }
+    }
+
+    .jump{
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .jump .label{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .letters{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .letters a{
+      text-decoration:none;
+      display:inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items:center;
+      justify-content:center;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      font-weight: 750;
+      font-size: 12px;
+    }
+    .letters a:hover{
+      border-color: rgba(220,38,38,.35);
+      box-shadow: 0 0 0 4px rgba(220,38,38,.10);
+    }
+    .letters a.disabled{
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    .results{
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .list{
+      max-height: 62vh;
+      overflow:auto;
+    }
+.search-accent {
+  background: rgba(220,38,38,.06);
+  border-bottom: 1px solid rgba(220,38,38,.22);
+}
+
+.search-accent h2 {
+  color: var(--red);
+  font-weight: 800;
+}
+
+.search-accent .hint {
+  color: var(--red);
+  font-weight: 700;
+}
+
+    .row{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      display:grid;
+      grid-template-columns: 140px 1fr;
+      gap: 10px;
+      align-items: baseline;
+    }
+    .row:last-child{ border-bottom:none; }
+
+    .russ{
+      font-weight: 800;
+      letter-spacing:.2px;
+    }
+
+    .meta{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .eng{
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 750;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: #fff;
+    }
+    .badge.b{ border-color: rgba(29,78,216,.22); color: var(--blue); background: rgba(29,78,216,.06); }
+    .badge.r{ border-color: rgba(220,38,38,.22); color: var(--red); background: rgba(220,38,38,.06); }
+    .badge.m{ border-color: rgba(17,24,39,.18); color: #111827; background: rgba(17,24,39,.03); }
+
+    .grouphead{
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      font-weight: 850;
+      color: var(--blue);
+      letter-spacing:.35px;
+    }
+
+    footer{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 16px 28px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .smallcaps{ font-variant: all-small-caps; letter-spacing:.35px; }
+  </style>
+</head>
+
+<body>
+  <div class="flagbar"></div>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="title">Russenorsk Core Dictionary <span class="smallcaps">v1</span></div>
+        <div class="subtitle">English → Russenorsk search + A→Z scroll list (historical core snapshot)</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="panelhead search-accent">
+  <h2>Search</h2>
+  <div class="hint">Type English (e.g., “fish”, “harbor”, “cheap”).</div>
+</div>
+
+      <div class="controls">
+        <input id="q" type="search" placeholder="Search English…" autocomplete="off" />
+        <button class="btn primary" id="clearBtn">Clear</button>
+      </div>
+
+      <div class="layout">
+        <aside class="jump">
+          <div class="label">Jump to letter</div>
+          <div class="letters" id="letters"></div>
+          <div class="label" style="margin-top:12px;">Quick tips</div>
+          <div class="hint">
+            • Scroll list is alphabetical by Russenorsk form.<br>
+            • Search matches English meanings (substring).<br>
+            • Origin badges: <span class="badge r">R</span> Russian, <span class="badge b">N</span> Norwegian, <span class="badge m">Mix</span>.
+          </div>
+        </aside>
+
+        <section class="results">
+          <div class="panelhead">
+            <h2>Results / Full List</h2>
+            <div class="hint" id="count"></div>
+          </div>
+          <div class="list" id="list"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    This is a lightweight reference UI for the <b>Russenorsk Historical Core v1</b>. Spellings are normalized for usability; historical sources vary.
+    Theme colors are red/white/blue as a nod to both Norway and Russia.
+  </footer>
+
+<script>
+  // --- DICTIONARY DATA ---
+  // Fields:
+  // rs = Russenorsk form
+  // pr = pronunciation (plain phonetics)
+  // st = stressed syllable cue
+  // en = English gloss
+  // org = "N" (Norwegian), "R" (Russian), "M" (mixed/unclear)
+  const DICT = [
+    // Pronouns & possession
+    { rs:"ja", pr:"YAH", en:"I / me; yes (context)", org:"M" },
+    { rs:"du", pr:"DOO", st:"DOO", en:"you", org:"N" },
+    { rs:"han", pr:"HAHN", st:"—", en:"he", org:"N" },
+    { rs:"moja", pr:"MOH-yah", st:"MOH", en:"my / mine", org:"R" },
+    { rs:"tvoja", pr:"TVOH-yah", st:"TVOH", en:"your / yours", org:"R" },
+    { rs:"sin", pr:"SEEN", st:"SEEN", en:"his", org:"N" },
+    { rs:"sam", pr:"SAHM", st:"—", en:"same", org:"N" },
+    { rs:"alle", pr:"AHL-leh", st:"AHL", en:"all", org:"N" },
+
+    // Core verbs (uninflected)
+    { rs:"kom", pr:"KOM", st:"—", en:"come", org:"N" },
+    { rs:"gå", pr:"GAW", st:"—", en:"go", org:"N" },
+    { rs:"dra", pr:"DRAH", st:"—", en:"go away; pull", org:"N" },
+    { rs:"reise", pr:"RYE-seh", st:"RYE", en:"travel", org:"N" },
+    { rs:"ha", pr:"HAH", st:"HAH", en:"have", org:"N" },
+    { rs:"gi", pr:"GEE", st:"GEE", en:"give", org:"N" },
+    { rs:"ta", pr:"TAH", st:"TAH", en:"take", org:"N" },
+    { rs:"kjøp", pr:"KYERP", st:"—", en:"buy (variant)", org:"N" },
+    { rs:"kup", pr:"KOOP", st:"—", en:"buy (variant)", org:"M" },
+    { rs:"salg", pr:"SAHLG", st:"—", en:"sell", org:"N" },
+    { rs:"arbeid", pr:"AR-bide", st:"AR", en:"work", org:"N" },
+    { rs:"snakk", pr:"SNAHK", st:"—", en:"speak (variant)", org:"N" },
+    { rs:"sprek", pr:"SPREK", st:"—", en:"speak (variant)", org:"N" },
+    { rs:"forsto", pr:"for-STOH", st:"STOH", en:"understand", org:"N" },
+    { rs:"forstå", pr:"for-STOH", st:"STOH", en:"understand (variant)", org:"N" },
+    { rs:"vite", pr:"VEE-teh", st:"VEE", en:"know", org:"N" },
+    { rs:"se", pr:"SEH", st:"SEH", en:"see", org:"N" },
+    { rs:"ligge", pr:"LIG-geh", st:"LIG", en:"lie; be located", org:"N" },
+    { rs:"stå", pr:"STOH", st:"STOH", en:"stand", org:"N" },
+    { rs:"bringe", pr:"BRING-eh", st:"BRING", en:"bring", org:"N" },
+    { rs:"bli", pr:"BLEE", st:"BLEE", en:"become; stay", org:"N" },
+    { rs:"leve", pr:"LEE-veh", st:"LEE", en:"live", org:"N" },
+    { rs:"dø", pr:"DER", st:"—", en:"die", org:"N" },
+    { rs:"spise", pr:"SPEE-seh", st:"SPEE", en:"eat", org:"N" },
+    { rs:"drikke", pr:"DRIK-keh", st:"DRIK", en:"drink", org:"N" },
+    { rs:"vente", pr:"VEN-teh", st:"VEN", en:"wait", org:"N" },
+    { rs:"slip", pr:"SLEEP", st:"—", en:"sleep (root)", org:"M" },
+    { rs:"slipom", pr:"SLEE-pom", st:"SLEE", en:"sleep; want to sleep (-om form)", org:"M" },
+    { rs:"kopom", pr:"KOH-pom", st:"KOH", en:"buy (-om form)", org:"M" },
+    { rs:"kupom", pr:"KOO-pom", st:"KOO", en:"buy (-om form)", org:"M" },
+    { rs:"sprækom", pr:"SPRAY-kom", st:"SPRAY", en:"speak (-om form)", org:"M" },
+
+    // Trade & economy
+    { rs:"handel", pr:"HAN-del", st:"HAN", en:"trade", org:"N" },
+    { rs:"pris", pr:"PREES", st:"—", en:"price", org:"M" },
+    { rs:"penger", pr:"PENG-er", st:"PENG", en:"money", org:"N" },
+    { rs:"dyr", pr:"DEER", st:"—", en:"expensive", org:"N" },
+    { rs:"billig", pr:"BIL-lig", st:"BIL", en:"cheap", org:"N" },
+    { rs:"kosta", pr:"KOS-tah", st:"KOS", en:"cost", org:"M" },
+    { rs:"våg", pr:"VOHG", st:"—", en:"unit of weight", org:"N" },
+    { rs:"mangeli", pr:"MAN-geh-lee", st:"MAN", en:"many; much", org:"M" },
+    { rs:"lite", pr:"LEE-teh", st:"LEE", en:"little; small amount", org:"N" },
+    { rs:"nok", pr:"NOK", st:"—", en:"enough", org:"N" },
+    { rs:"alt", pr:"AHLT", st:"—", en:"everything", org:"N" },
+    { rs:"ingenting", pr:"IN-gen-ting", st:"IN", en:"nothing", org:"N" },
+    { rs:"klar", pr:"KLAHR", st:"—", en:"ready", org:"N" },
+    { rs:"ferdig", pr:"FER-dig", st:"FER", en:"finished", org:"N" },
+    { rs:"bytte", pr:"BIT-teh", st:"BIT", en:"exchange", org:"N" },
+
+    // Fishing & food
+    { rs:"fisk", pr:"FISK", st:"—", en:"fish (Norwegian form)", org:"N" },
+    { rs:"ryba", pr:"REE-bah", st:"REE", en:"fish (Russian form)", org:"R" },
+    { rs:"torsk", pr:"TORSK", st:"—", en:"cod", org:"N" },
+    { rs:"sild", pr:"SEELD", st:"—", en:"herring", org:"N" },
+    { rs:"kjøtt", pr:"KYUT", st:"—", en:"meat", org:"N" },
+    { rs:"brød", pr:"BROHD", st:"—", en:"bread (Norwegian form)", org:"N" },
+    { rs:"kleba", pr:"KLEH-bah", st:"KLEH", en:"bread (Russian-influenced form)", org:"R" },
+    { rs:"mel", pr:"MEL", st:"—", en:"flour (Norwegian form)", org:"N" },
+    { rs:"mokka", pr:"MOK-kah", st:"MOK", en:"flour (variant)", org:"M" },
+    { rs:"salt", pr:"SAHLT", st:"—", en:"salt", org:"N" },
+    { rs:"øl", pr:"UHL", st:"—", en:"beer", org:"N" },
+    { rs:"vodka", pr:"VOD-kah", st:"VOD", en:"vodka", org:"R" },
+    { rs:"mat", pr:"MAHT", st:"—", en:"food", org:"N" },
+    { rs:"vann", pr:"VAHN", st:"—", en:"water", org:"N" },
+    { rs:"suppe", pr:"SOOP-peh", st:"SOOP", en:"soup", org:"N" },
+    { rs:"smør", pr:"SMUR", st:"—", en:"butter", org:"N" },
+    { rs:"ost", pr:"OHST", st:"—", en:"cheese", org:"N" },
+    { rs:"korn", pr:"KORN", st:"—", en:"grain", org:"N" },
+    { rs:"frokost", pr:"FROH-kost", st:"FROH", en:"breakfast", org:"N" },
+    { rs:"middag", pr:"MID-dahg", st:"MID", en:"meal", org:"N" },
+
+    // Objects & tools
+    { rs:"båt", pr:"BOHT", st:"—", en:"boat", org:"N" },
+    { rs:"skip", pr:"SKEEP", st:"—", en:"ship", org:"N" },
+    { rs:"havn", pr:"HAHVN", st:"—", en:"harbor", org:"N" },
+    { rs:"tau", pr:"TAU", st:"—", en:"rope", org:"N" },
+    { rs:"nett", pr:"NET", st:"—", en:"net", org:"N" },
+    { rs:"kasse", pr:"KAS-seh", st:"KAS", en:"box", org:"N" },
+    { rs:"sekk", pr:"SEK", st:"—", en:"sack", org:"N" },
+    { rs:"kniv", pr:"KNEEV", st:"—", en:"knife", org:"N" },
+    { rs:"jern", pr:"YERN", st:"—", en:"iron", org:"N" },
+    { rs:"tre", pr:"TREH", st:"TREH", en:"wood", org:"N" },
+    { rs:"hus", pr:"HOOS", st:"—", en:"house", org:"N" },
+    { rs:"stova", pr:"STOH-vah", st:"STOH", en:"room; place", org:"N" },
+    { rs:"kirka", pr:"KEER-kah", st:"KEER", en:"church (variant)", org:"N" },
+    { rs:"kjerka", pr:"YER-kah", st:"YER", en:"church (variant)", org:"N" },
+    { rs:"vei", pr:"VAY", st:"VAY", en:"road", org:"N" },
+
+    // Place & direction
+    { rs:"her", pr:"HEHR", st:"—", en:"here", org:"N" },
+    { rs:"der", pr:"DEHR", st:"—", en:"there", org:"N" },
+    { rs:"hjem", pr:"YEM", st:"—", en:"home", org:"N" },
+    { rs:"land", pr:"LAHND", st:"—", en:"land", org:"N" },
+    { rs:"hav", pr:"HAHV", st:"—", en:"sea", org:"N" },
+    { rs:"fjell", pr:"FYEL", st:"—", en:"mountain", org:"N" },
+    { rs:"på", pr:"POH", st:"—", en:"on; at; to (universal preposition)", org:"N" },
+    { rs:"pa", pr:"PAH", st:"—", en:"on; at; to (variant)", org:"M" },
+    { rs:"po", pr:"POH", st:"—", en:"on; at; to (variant)", org:"M" },
+    { rs:"inni", pr:"IN-nee", st:"IN", en:"inside", org:"N" },
+    { rs:"ute", pr:"OO-teh", st:"OO", en:"outside", org:"N" },
+    { rs:"borte", pr:"BOR-teh", st:"BOR", en:"away", org:"N" },
+
+    // Time
+    { rs:"nu", pr:"NOO", st:"NOO", en:"now", org:"M" },
+    { rs:"idag", pr:"ee-DAHG", st:"DAHG", en:"today", org:"N" },
+    { rs:"morra", pr:"MOR-rah", st:"MOR", en:"tomorrow", org:"N" },
+    { rs:"snart", pr:"SNAHRT", st:"—", en:"soon", org:"N" },
+    { rs:"lenge", pr:"LENG-eh", st:"LENG", en:"long time", org:"N" },
+    { rs:"dag", pr:"DAHG", st:"—", en:"day", org:"N" },
+    { rs:"natt", pr:"NAHT", st:"—", en:"night", org:"N" },
+
+    // Weather & environment
+    { rs:"vind", pr:"VIND", st:"—", en:"wind", org:"N" },
+    { rs:"storm", pr:"STORM", st:"—", en:"storm", org:"N" },
+    { rs:"snø", pr:"SNYUR", st:"—", en:"snow", org:"N" },
+    { rs:"is", pr:"EES", st:"—", en:"ice", org:"N" },
+    { rs:"kald", pr:"KAHLD", st:"—", en:"cold", org:"N" },
+    { rs:"varm", pr:"VAHRM", st:"—", en:"warm", org:"N" },
+    { rs:"regn", pr:"RAIN", st:"—", en:"rain", org:"N" },
+    { rs:"vær", pr:"VAIR", st:"—", en:"weather", org:"N" },
+
+    // States & descriptors
+    { rs:"god", pr:"GOOD", st:"—", en:"good", org:"N" },
+    { rs:"bra", pr:"BRAH", st:"—", en:"fine; okay", org:"N" },
+    { rs:"dårlig", pr:"DOH-lig", st:"DOH", en:"bad", org:"N" },
+    { rs:"stor", pr:"STOHR", st:"—", en:"big", org:"N" },
+    { rs:"liten", pr:"LEE-ten", st:"LEE", en:"small", org:"N" },
+    { rs:"tung", pr:"TOONG", st:"—", en:"heavy", org:"N" },
+    { rs:"lett", pr:"LET", st:"—", en:"light", org:"N" },
+    { rs:"rask", pr:"RAHSK", st:"—", en:"fast", org:"N" },
+    { rs:"langsom", pr:"LANG-som", st:"LANG", en:"slow", org:"N" },
+    { rs:"sulten", pr:"SOOL-ten", st:"SOOL", en:"hungry", org:"N" },
+    { rs:"trøtt", pr:"TRURT", st:"—", en:"tired", org:"N" },
+    { rs:"full", pr:"FOOL", st:"—", en:"drunk", org:"N" },
+    { rs:"vred", pr:"VREHD", st:"—", en:"angry", org:"M" },
+    { rs:"rik", pr:"REEK", st:"—", en:"rich", org:"N" },
+
+    // Questions & function words
+    { rs:"kak", pr:"KAHK", st:"—", en:"what; how", org:"R" },
+    { rs:"hvor", pr:"VOR", st:"—", en:"where", org:"N" },
+    { rs:"hvem", pr:"VEM", st:"—", en:"who", org:"N" },
+    { rs:"njet", pr:"NYET", st:"NYET", en:"no; not", org:"R" },
+    { rs:"ikke", pr:"IK-keh", st:"IK", en:"not", org:"N" },
+    { rs:"og", pr:"OHG", st:"—", en:"and", org:"N" },
+    { rs:"men", pr:"MEN", st:"—", en:"but", org:"N" },
+    { rs:"for", pr:"FOR", st:"—", en:"for; because", org:"N" },
+    { rs:"litt", pr:"LIT", st:"—", en:"a little", org:"N" },
+
+    // Courtesy / meta
+    { rs:"basiba", pr:"bah-SEE-bah", st:"SEE", en:"thanks (variant spelling)", org:"R" }
+  ];
+
+  // --- RENDERING ---
+  const $q = document.getElementById("q");
+  const $list = document.getElementById("list");
+  const $letters = document.getElementById("letters");
+  const $count = document.getElementById("count");
+  const $clear = document.getElementById("clearBtn");
+
+  function badge(org){
+    if(org === "R") return `<span class="badge r">R</span>`;
+    if(org === "N") return `<span class="badge b">N</span>`;
+    return `<span class="badge m">Mix</span>`;
+  }
+
+  function norm(s){ return (s || "").toLowerCase().trim(); }
+
+  function buildIndex(dictSorted){
+    const present = new Set(dictSorted.map(x => norm(x.rs)[0]).filter(Boolean));
+    const A = "abcdefghijklmnopqrstuvwxyz".split("");
+    $letters.innerHTML = A.map(ch => {
+      const ok = present.has(ch);
+      const cls = ok ? "" : "disabled";
+      const href = ok ? `#L_${ch.toUpperCase()}` : "#";
+      return `<a class="${cls}" href="${href}">${ch.toUpperCase()}</a>`;
+    }).join("");
+  }
+
+  function render(dictView){
+    // group headers by first letter of rs
+    let html = "";
+    let lastLetter = "";
+    dictView.forEach(entry => {
+      const letter = (entry.rs || "?").trim().charAt(0).toUpperCase();
+      if(letter !== lastLetter){
+        lastLetter = letter;
+        html += `<div class="grouphead" id="L_${letter}">${letter}</div>`;
+      }
+      html += `
+        <div class="row">
+          <div>
+            <div class="russ">${entry.rs} ${badge(entry.org)}</div>
+            <div class="meta">${entry.pr}</div>
+          </div>
+          <div>
+            <div class="eng">${entry.en}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    $list.innerHTML = html || `<div class="row"><div><b>No matches.</b></div><div class="meta">Try a different English word.</div></div>`;
+    $count.textContent = `${dictView.length} entries`;
+  }
+
+  // Prepare canonical sorted list by Russenorsk form
+  const SORTED = [...DICT]
+    .sort((a,b) => norm(a.rs).localeCompare(norm(b.rs)));
+
+  buildIndex(SORTED);
+  render(SORTED);
+
+  function applySearch(){
+    const q = norm($q.value);
+    if(!q){
+      render(SORTED);
+      return;
+    }
+    const filtered = SORTED.filter(e =>
+      norm(e.en).includes(q)
+      || norm(e.rs).includes(q)
+    );
+    render(filtered);
+  }
+
+  $q.addEventListener("input", applySearch);
+  $clear.addEventListener("click", () => { $q.value = ""; $q.focus(); applySearch(); });
+
+  // Nice touch: if user clicks a jump letter while filtered, clear filter so list exists
+  $letters.addEventListener("click", (ev) => {
+    const a = ev.target.closest("a");
+    if(!a || a.classList.contains("disabled")) return;
+    if(norm($q.value)){
+      $q.value = "";
+      applySearch();
+      // let browser jump after render
+      setTimeout(() => location.hash = a.getAttribute("href"), 0);
+      ev.preventDefault();
+    }
+  });
+</script>
+</body>
+</html>
