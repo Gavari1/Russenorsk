@@ -1,497 +1,163 @@
-# State Shorthand
-A tiny, symbol-based check-in system: **State + Direction + Cause**.
-
-It’s designed for real life: work, family, teams, journaling, ADHD brains, introverts, loud extroverts—anyone who wants to communicate *how they are* without writing a paragraph.
-
-## The Format
-**[STATE][DIRECTION] (CAUSE)**
-
-- **STATE** = how you feel right now
-- **DIRECTION** = where it’s going
-- **CAUSE** (optional) = what’s driving it
-
-Example:
-- **△→ (W)** = restless/irritated, staying that way, because of work
-
----
-
-## State Symbols
-Pick one:
-
-- **○** = steady / okay / regulated
-- **△** = restless / irritated / unsettled
-- **✕** = overloaded / overwhelmed / too much
-- **↓** = drained / tired / low battery
-- **↑** = energized / hyped / ready to move
-
-> Tip: You can customize these meanings slightly for your household or team. The goal is “fast and true,” not “perfect.”
-
----
-
-## Direction Arrows
-Pick one:
-
-- **↑** = improving
-- **→** = staying the same
-- **↓** = getting worse
-
-Examples:
-- **✕↑** = overwhelmed, but improving
-- **↓→** = tired, staying tired
-- **○↓** = okay, but slipping
-
----
-
-## Cause Tags (Optional)
-Add 1 letter (or 2 if needed):
-
-- **W** = work / school
-- **B** = body (sleep, hunger, illness, hormones)
-- **M** = mind (overthinking, anxiety, focus, stress)
-- **S** = social (people, conflict, crowds)
-- **H** = home / family logistics
-- **F** = faith / spiritual (peace, dryness, conviction, etc.)
-
-Examples:
-- **✕→ (W+M)** = overwhelmed and stuck, work + mind
-- **↓↑ (B)** = tired but recovering, body-related
-- **○→ (F)** = steady and stable, faith-related
-
----
-
-## Why This Works
-- **Privacy with signal** (no forced explanations)
-- **Low-friction honesty**
-- **Pattern spotting over time** (you’ll notice what consistently causes △→ or ✕↓)
-- **Family-friendly** (kids can use symbols only; teens/adults can add cause tags)
-
----
-
-## Quick Examples
-- **△→ (W)** “I’m irritated and it’s not changing. Work.”
-- **✕↑ (M)** “I was overloaded, but I’m improving. Mind stress.”
-- **↓→ (B)** “I’m tired and staying tired. Body.”
-- **↑→** “I’m energized and stable.”
-- **○↓ (S)** “I’m okay but slipping because of social stuff.”
-
----
-
-## License
-MIT — steal it, remix it, teach it, rename it, do whatever.
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>State Shorthand</title>
+  <title>Code Translator</title>
   <style>
-    :root{
-      --bg:#0b1020;
-      --card:#121a33;
-      --muted:rgba(255,255,255,.72);
-      --faint:rgba(255,255,255,.12);
-      --text:#f5f7ff;
-      --accent:#8ab4ff;
-      --accent2:#a7ffcf;
-      --warn:#ffd18a;
-      --danger:#ff8aa3;
-      --radius:18px;
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    }
-    body{
-      margin:0;
-      background: radial-gradient(1200px 800px at 10% 0%, rgba(138,180,255,.25), transparent 55%),
-                  radial-gradient(900px 600px at 85% 15%, rgba(167,255,207,.18), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-      padding: 28px 14px 60px;
-      display:flex;
-      justify-content:center;
-    }
-    .wrap{
-      width: min(980px, 100%);
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    header{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      padding:18px 18px 6px;
-    }
-    h1{
-      margin:0;
-      font-size: clamp(26px, 3.2vw, 40px);
-      letter-spacing: .3px;
-    }
-    .sub{
-      color:var(--muted);
-      max-width: 72ch;
-      line-height:1.45;
-      font-size: 15.5px;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:14px;
-    }
-    @media (max-width: 880px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid var(--faint);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card .hd{
-      padding:14px 16px;
-      border-bottom: 1px solid var(--faint);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .card .hd h2{
-      margin:0;
-      font-size: 16px;
-      letter-spacing:.2px;
-    }
-    .pill{
-      font-size:12px;
-      color: rgba(255,255,255,.78);
-      border:1px solid var(--faint);
-      padding:6px 10px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.18);
-      white-space:nowrap;
-    }
-    .bd{ padding:14px 16px 16px; }
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin: 10px 0 14px;
-    }
-    button.opt{
-      cursor:pointer;
-      border-radius: 999px;
-      border: 1px solid var(--faint);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
-      padding: 10px 12px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      transition: transform .06s ease, border-color .2s ease, background .2s ease;
-      user-select:none;
-    }
-    button.opt:hover{ transform: translateY(-1px); border-color: rgba(138,180,255,.35); }
-    button.opt.active{
-      border-color: rgba(138,180,255,.75);
-      background: rgba(138,180,255,.12);
-    }
-    .sym{
-      font-size: 18px;
-      width: 22px;
-      text-align:center;
-      color: var(--accent);
-    }
-    .lbl{ font-size: 13.5px; color: rgba(255,255,255,.86); }
-    .help{
-      font-size: 13px;
-      color: var(--muted);
-      line-height:1.45;
-    }
-    .output{
-      margin-top: 10px;
-      padding: 14px 14px 12px;
-      border-radius: 14px;
-      border:1px dashed rgba(255,255,255,.22);
-      background: rgba(0,0,0,.16);
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .code{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 22px;
-      letter-spacing:.6px;
-    }
-    .desc{
-      color: rgba(255,255,255,.85);
-      font-size: 14px;
-      line-height:1.4;
-    }
-    .tiny{
-      color: var(--muted);
-      font-size: 12.5px;
-    }
-    .split{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      margin-top:10px;
-    }
-    @media (max-width: 520px){
-      .split{ grid-template-columns: 1fr; }
-    }
-    .list{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .item{
-      padding:10px 12px;
-      border:1px solid var(--faint);
-      border-radius:14px;
-      background: rgba(0,0,0,.14);
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-    }
-    .item .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    .item .mono strong{ color: var(--accent2); }
-    .footer{
-      padding: 2px 18px 0;
-      color: rgba(255,255,255,.6);
-      font-size: 12.5px;
-      line-height:1.5;
-    }
-    .copy{
-      cursor:pointer;
-      border-radius: 12px;
-      border: 1px solid var(--faint);
-      background: rgba(0,0,0,.18);
-      color: rgba(255,255,255,.9);
-      padding: 8px 10px;
-      font-size: 12.5px;
-    }
-    .copy:hover{ border-color: rgba(167,255,207,.5); background: rgba(167,255,207,.10); }
+    body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 24px; line-height: 1.35; }
+    textarea { width: 100%; min-height: 140px; padding: 12px; font-size: 16px; }
+    .row { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+    button, select { padding: 10px 12px; font-size: 15px; }
+    .hint { opacity: 0.75; font-size: 13px; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>State Shorthand</h1>
-      <div class="sub">
-        A tiny check-in notation: <b>State</b> + <b>Direction</b> + optional <b>Cause</b>.
-        Built for real life — fast, private, and surprisingly expressive.
-      </div>
-    </header>
+  <h1>Our Code Translator</h1>
 
-    <div class="grid">
-      <section class="card">
-        <div class="hd">
-          <h2>Build your shorthand</h2>
-          <span class="pill">Format: [STATE][ARROW] (CAUSE)</span>
-        </div>
-        <div class="bd">
-          <div class="help"><b>1) Pick a state</b></div>
-          <div class="row" id="stateRow"></div>
+  <label for="input">Input</label>
+  <textarea id="input" placeholder="Type English (or coded text) here..."></textarea>
 
-          <div class="help"><b>2) Pick a direction</b></div>
-          <div class="row" id="dirRow"></div>
+  <div class="row">
+    <button id="encode">Encode →</button>
+    <button id="decode">← Decode</button>
 
-          <div class="help"><b>3) Add a cause</b> (optional)</div>
-          <div class="row" id="causeRow"></div>
+    <label>
+      Suffix:
+      <select id="suffix">
+        <option value="a" selected>a</option>
+        <option value="o">o</option>
+      </select>
+    </label>
 
-          <div class="output">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-              <div class="code" id="outCode">—</div>
-              <button class="copy" id="copyBtn" title="Copy to clipboard">Copy</button>
-            </div>
-            <div class="desc" id="outDesc">Pick options to generate an interpretation.</div>
-            <div class="tiny" id="outTiny">Tip: kids can use just the state symbol. Teens/adults can add arrows + cause tags.</div>
-          </div>
-        </div>
-      </section>
+    <label>
+      Preserve capitalization:
+      <select id="caps">
+        <option value="yes" selected>Yes</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+  </div>
 
-      <aside class="card">
-        <div class="hd">
-          <h2>Examples people can steal</h2>
-          <span class="pill">No perfection required</span>
-        </div>
-        <div class="bd">
-          <div class="split">
-            <div class="list" id="exampleLeft"></div>
-            <div class="list" id="exampleRight"></div>
-          </div>
-          <div style="height:10px"></div>
-          <div class="help">
-            The point isn’t “clinical accuracy.” The point is <b>fast truth</b> without a speech.
-            Customize symbols/letters to fit your house, team, or brain.
-          </div>
-        </div>
-      </aside>
-    </div>
+  <label for="output">Output</label>
+  <textarea id="output" readonly></textarea>
 
-    <div class="footer">
-      MIT license vibes: remix freely. If it helps you talk to your family or survive a slow workday, it’s doing its job.
-    </div>
+  <div class="hint">
+    Rule: move first letter to end + add suffix (encode). Remove suffix + move last letter to front (decode).
+    Punctuation and spacing are preserved.
   </div>
 
 <script>
-  const STATES = [
-    { key: "steady", sym: "○", label: "steady / okay", desc: "steady/regulated" },
-    { key: "restless", sym: "△", label: "restless / irritated", desc: "restless/irritated" },
-    { key: "overloaded", sym: "✕", label: "overloaded / too much", desc: "overloaded/overwhelmed" },
-    { key: "drained", sym: "↓", label: "drained / tired", desc: "tired/drained" },
-    { key: "energized", sym: "↑", label: "energized / hyped", desc: "energized/ready" },
-  ];
+  const inputEl = document.getElementById("input");
+  const outputEl = document.getElementById("output");
+  const suffixEl = document.getElementById("suffix");
+  const capsEl = document.getElementById("caps");
 
-  const DIRS = [
-    { key: "improving", sym: "↑", label: "improving", desc: "improving" },
-    { key: "same", sym: "→", label: "same", desc: "staying the same" },
-    { key: "worse", sym: "↓", label: "worse", desc: "getting worse" },
-  ];
-
-  const CAUSES = [
-    { key: "W", label: "W — work/school", desc: "work/school" },
-    { key: "B", label: "B — body", desc: "body (sleep/food/health)" },
-    { key: "M", label: "M — mind", desc: "mind (stress/overthinking)" },
-    { key: "S", label: "S — social", desc: "social" },
-    { key: "H", label: "H — home", desc: "home/family logistics" },
-    { key: "F", label: "F — faith", desc: "faith/spiritual" },
-  ];
-
-  let selectedState = null;
-  let selectedDir = null;
-  let selectedCauses = new Set();
-
-  function mkBtn({ sym, label }, onClick){
-    const b = document.createElement("button");
-    b.className = "opt";
-    b.type = "button";
-    b.innerHTML = `<span class="sym">${sym ?? ""}</span><span class="lbl">${label}</span>`;
-    b.addEventListener("click", onClick);
-    return b;
+  function isLetter(ch) {
+    return /[A-Za-z]/.test(ch);
   }
 
-  function render(){
-    const outCode = document.getElementById("outCode");
-    const outDesc = document.getElementById("outDesc");
+  // Split into tokens while preserving spaces and punctuation:
+  // - words: sequences containing letters/apostrophes
+  // - everything else: single characters (punctuation, spaces, emojis, etc.)
+  function tokenize(text) {
+    const tokens = [];
+    let i = 0;
 
-    if(!selectedState && !selectedDir && selectedCauses.size === 0){
-      outCode.textContent = "—";
-      outDesc.textContent = "Pick options to generate an interpretation.";
-      return;
-    }
+    while (i < text.length) {
+      const ch = text[i];
 
-    const st = selectedState ? STATES.find(s => s.key === selectedState) : null;
-    const dr = selectedDir ? DIRS.find(d => d.key === selectedDir) : null;
-    const causes = [...selectedCauses];
-
-    const code = `${st ? st.sym : ""}${dr ? dr.sym : ""}${causes.length ? ` (${causes.join("+")})` : ""}`.trim();
-    outCode.textContent = code || "—";
-
-    const stDesc = st ? st.desc : "a state";
-    const drDesc = dr ? dr.desc : "";
-    const csDesc = causes.length ? causes.map(c => CAUSES.find(x => x.key === c)?.desc || c).join(" + ") : "";
-
-    let sentence = "";
-    if(st && dr){
-      sentence = `You’re ${stDesc}, and it’s ${drDesc}.`;
-    } else if(st){
-      sentence = `You’re ${stDesc}.`;
-    } else if(dr){
-      sentence = `Direction: ${drDesc}.`;
-    }
-
-    if(csDesc){
-      sentence += ` Likely driven by ${csDesc}.`;
-    }
-
-    outDesc.textContent = sentence.trim();
-  }
-
-  function setActive(rowEl, predicate){
-    [...rowEl.querySelectorAll("button.opt")].forEach(btn => {
-      btn.classList.toggle("active", predicate(btn));
-    });
-  }
-
-  function init(){
-    const stateRow = document.getElementById("stateRow");
-    const dirRow = document.getElementById("dirRow");
-    const causeRow = document.getElementById("causeRow");
-
-    // States
-    STATES.forEach(s => {
-      const btn = mkBtn({sym: s.sym, label: s.label}, () => {
-        selectedState = (selectedState === s.key) ? null : s.key;
-        setActive(stateRow, b => b.dataset.key === selectedState);
-        render();
-      });
-      btn.dataset.key = s.key;
-      stateRow.appendChild(btn);
-    });
-
-    // Directions
-    DIRS.forEach(d => {
-      const btn = mkBtn({sym: d.sym, label: d.label}, () => {
-        selectedDir = (selectedDir === d.key) ? null : d.key;
-        setActive(dirRow, b => b.dataset.key === selectedDir);
-        render();
-      });
-      btn.dataset.key = d.key;
-      dirRow.appendChild(btn);
-    });
-
-    // Causes (multi-select)
-    CAUSES.forEach(c => {
-      const btn = mkBtn({sym: c.key, label: c.label}, () => {
-        if(selectedCauses.has(c.key)) selectedCauses.delete(c.key);
-        else selectedCauses.add(c.key);
-        btn.classList.toggle("active", selectedCauses.has(c.key));
-        render();
-      });
-      btn.querySelector(".sym").style.color = "var(--accent2)";
-      causeRow.appendChild(btn);
-    });
-
-    // Examples
-    const examples = [
-      { code:"△→ (W)", text:"Restless/irritated and stuck because of work." },
-      { code:"✕↑ (M)", text:"Overloaded but improving; mind-stress easing." },
-      { code:"↓→ (B)", text:"Tired and staying tired; body needs basics." },
-      { code:"○→ (F)", text:"Steady and stable; faith-related calm." },
-      { code:"✕↓ (S)", text:"Overwhelmed and getting worse; social overload." },
-      { code:"↑→", text:"Energized and stable. Ready to move." },
-    ];
-    const left = document.getElementById("exampleLeft");
-    const right = document.getElementById("exampleRight");
-    examples.forEach((ex, i) => {
-      const el = document.createElement("div");
-      el.className = "item";
-      el.innerHTML = `<div class="mono"><strong>${ex.code}</strong></div><div class="help">${ex.text}</div>`;
-      (i % 2 === 0 ? left : right).appendChild(el);
-    });
-
-    // Copy button
-    document.getElementById("copyBtn").addEventListener("click", async () => {
-      const txt = document.getElementById("outCode").textContent;
-      if(!txt || txt === "—") return;
-      try{
-        await navigator.clipboard.writeText(txt);
-        const btn = document.getElementById("copyBtn");
-        const old = btn.textContent;
-        btn.textContent = "Copied!";
-        setTimeout(() => btn.textContent = old, 900);
-      }catch(e){
-        // fallback: select text not implemented; keep it simple
-        alert("Copy failed — your browser blocked clipboard access.");
+      // Word token: starts with a letter
+      if (isLetter(ch)) {
+        let j = i + 1;
+        while (j < text.length) {
+          const c = text[j];
+          // Keep letters and internal apostrophes (don't, you're)
+          if (isLetter(c) || c === "'") j++;
+          else break;
+        }
+        tokens.push(text.slice(i, j));
+        i = j;
+      } else {
+        // Non-word token: keep exact char (space/punct)
+        tokens.push(ch);
+        i++;
       }
-    });
-
-    render();
+    }
+    return tokens;
   }
 
-  init();
+  function detectCapsStyle(word) {
+    if (word.toUpperCase() === word) return "upper";
+    if (word[0].toUpperCase() === word[0] && word.slice(1).toLowerCase() === word.slice(1)) return "title";
+    return "lower";
+  }
+
+  function applyCapsStyle(word, style) {
+    if (style === "upper") return word.toUpperCase();
+    if (style === "title") return word[0].toUpperCase() + word.slice(1).toLowerCase();
+    return word.toLowerCase();
+  }
+
+  function encodeWord(word, suffix, preserveCaps) {
+    // Keep original caps style if requested
+    const style = preserveCaps ? detectCapsStyle(word) : "lower";
+
+    // Work in lowercase for transformation
+    const w = word.toLowerCase();
+    if (w.length === 0) return word;
+
+    // If it's just "'" or weird edge, return as-is
+    if (!/[a-z]/.test(w)) return word;
+
+    // Move first letter to end, add suffix
+    const first = w[0];
+    const rest = w.slice(1);
+    const coded = rest + first + suffix;
+
+    return preserveCaps ? applyCapsStyle(coded, style) : coded;
+  }
+
+  function decodeWord(word, suffix, preserveCaps) {
+    const style = preserveCaps ? detectCapsStyle(word) : "lower";
+    const w = word.toLowerCase();
+
+    // Only decode if it ends with the chosen suffix and has enough length
+    if (!w.endsWith(suffix) || w.length < 2) return word;
+
+    const core = w.slice(0, -1); // remove suffix
+    const last = core[core.length - 1];
+    const rest = core.slice(0, -1);
+    const plain = last + rest;
+
+    return preserveCaps ? applyCapsStyle(plain, style) : plain;
+  }
+
+  function transform(text, mode) {
+    const suffix = suffixEl.value;
+    const preserveCaps = capsEl.value === "yes";
+    const tokens = tokenize(text);
+
+    const out = tokens.map(tok => {
+      // Only transform word tokens (they start with a letter)
+      if (tok.length && isLetter(tok[0])) {
+        return mode === "encode"
+          ? encodeWord(tok, suffix, preserveCaps)
+          : decodeWord(tok, suffix, preserveCaps);
+      }
+      return tok; // punctuation/space/etc.
+    });
+
+    return out.join("");
+  }
+
+  document.getElementById("encode").addEventListener("click", () => {
+    outputEl.value = transform(inputEl.value, "encode");
+  });
+
+  document.getElementById("decode").addEventListener("click", () => {
+    outputEl.value = transform(inputEl.value, "decode");
+  });
 </script>
 </body>
 </html>
